@@ -11,6 +11,7 @@ import { CompanyModule } from './company/company.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { IncomesModule } from './incomes/incomes.module';
 import config  from '../config';
+import { GlobalModule } from './shared/global.module';
 
 
 @Module({
@@ -24,6 +25,7 @@ import config  from '../config';
         PORT: joi.number().default(3000),
       })
     }),
+    GlobalModule,
     ProjectsModule,
     DatabaseModule,
     CompanyModule,

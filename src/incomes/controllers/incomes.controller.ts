@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, BadRequestException } from '@nestjs/common';
 import { IncomesService } from '../services/incomes.service';
 import { CreateIncomeDto, UpdateIncomeDto } from '../dto/income.dto';
 
@@ -13,6 +13,7 @@ export class IncomesController {
 
   @Get()
   findAll() {
+    throw new BadRequestException('Error al obtener los ingresos');
     return this.incomesService.findAll();
   }
 
