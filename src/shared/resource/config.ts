@@ -9,4 +9,6 @@ export default registerAs('config', () => ({
         password: process.env.DATABASE_PASSWORD,
         port: process.env.DATABASE_PORT
     },
+    JWT_SECRET: process.env.JWT_SECRET,
+    apiKey: process.env.API_KEY,
 }))

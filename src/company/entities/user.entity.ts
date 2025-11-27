@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Company } from "./company.entity";
+import { Exclude } from "class-transformer";
 
 @Entity({name: 'users'})
 export  class User {
@@ -15,6 +16,7 @@ export  class User {
     @Column({type: 'bigint'})
     phone: number;
 
+    @Exclude()
     @Column({type: 'varchar', length: 255, nullable: false})
     password: string;
 

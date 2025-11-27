@@ -1,4 +1,4 @@
-import { ArgumentsHost, BadGatewayException, BadRequestException, Catch, ExceptionFilter, InternalServerErrorException, MethodNotAllowedException, NotAcceptableException, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
+import { ArgumentsHost, BadGatewayException, BadRequestException, Catch, ExceptionFilter, ForbiddenException, InternalServerErrorException, MethodNotAllowedException, NotAcceptableException, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
 
 
 @Catch()
@@ -8,6 +8,11 @@ export class CustomExceptionsFilters implements ExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost): void {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
+        const request = ctx.getRequest<Request>();
+
+        // console.log(request);
+        
+
         if (exception instanceof BadRequestException) {
             this.templateException(response, exception, 'Error en la validación de datos')
         }
@@ -32,7 +37,9 @@ export class CustomExceptionsFilters implements ExceptionFilter {
         if (exception instanceof NotAcceptableException) {
             this.templateException(response, exception)
         }
-
+        if (exception instanceof ForbiddenException) {
+            this.templateException(response, exception)
+        }
     }
 
     templateException(response, exception, msg?) {

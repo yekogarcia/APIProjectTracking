@@ -12,5 +12,6 @@ import { Company } from './entities/company.entity';
   imports: [TypeOrmModule.forFeature([Company, User])],
   controllers: [CompanyController, UserController],
   providers: [CompanyService, UserService],
+  exports: [CompanyService, UserService],
 })
 export class CompanyModule {}

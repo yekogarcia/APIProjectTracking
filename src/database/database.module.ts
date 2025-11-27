@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigType } from '@nestjs/config';
 
-import config from '../../config';
+import config from '../shared/resource/config';
 
 type SupportedDB = 'postgres' | 'mysql' | 'mariadb' | 'sqlite';
 

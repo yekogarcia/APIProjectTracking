@@ -10,8 +10,11 @@ import { ConfigModule } from '@nestjs/config';
 import { CompanyModule } from './company/company.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { IncomesModule } from './incomes/incomes.module';
-import config  from '../config';
 import { GlobalModule } from './shared/global.module';
+import { AuthService } from './auth/services/auth.service';
+import { AuthController } from './auth/controllers/auth.controller';
+import { AuthModule } from './auth/auth.module';
+import config from './shared/resource/config';
 
 
 @Module({
@@ -23,6 +26,7 @@ import { GlobalModule } from './shared/global.module';
       validationSchema: joi.object({
         DATABASE_CONNECTION: joi.string().default('postgres'),
         PORT: joi.number().default(3000),
+        API_KEY: joi.string().required(),
       })
     }),
     GlobalModule,
@@ -30,7 +34,8 @@ import { GlobalModule } from './shared/global.module';
     DatabaseModule,
     CompanyModule,
     ExpensesModule,
-    IncomesModule
+    IncomesModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
