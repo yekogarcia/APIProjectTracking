@@ -2,7 +2,10 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+
 import { ResponseInterceptor } from './shared/resource/response.interceptor';
+import { API_PREFIX, APP_DESCRIPTION, APP_NAME, APP_VERSION } from './shared/resource/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,20 +18,26 @@ async function bootstrap() {
     })
   );
 
+  app.setGlobalPrefix(API_PREFIX);
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('API description')
-    .setVersion('1.0')
+    .setTitle(APP_NAME)
+    .setDescription(APP_DESCRIPTION)
+    .setVersion(APP_VERSION)
     .addTag('API')
     .build();
 
   const dcoument = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, dcoument);
 
-  app.enableCors();
+  app.use(cookieParser());
+  app.enableCors({
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    credentials: true,
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 import { Project } from "../../projects/entities/project.entity";
+import { TotalProjects } from "../../projects/entities/totalProjects.entity";
 
 @Entity({ name: 'companys' })
 export class Company {
@@ -33,4 +34,7 @@ export class Company {
 
     @OneToMany(() => Project, project => project.company)
     projects: Project[]
+
+    @OneToMany(() => TotalProjects, totalProject => totalProject.company)
+    totalProjects: TotalProjects[]
 }

@@ -17,7 +17,7 @@ export class IncomesService {
       const newIncome = this.incomeRepository.create({
         ...data,
         userId: 1,
-        projectId: { id: data.projectId }
+        project: { id: data.projectId }
       });
       const resp = await this.incomeRepository.save(newIncome);
       return {
@@ -42,7 +42,6 @@ export class IncomesService {
   async update(id: number, data: UpdateIncomeDto) {
     try {
       const resp = await this.incomeRepository.update(id, data);
-      console.log(resp);
 
       return await this.findOne(id);
     } catch (error) {

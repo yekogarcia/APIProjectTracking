@@ -10,9 +10,6 @@ export class CustomExceptionsFilters implements ExceptionFilter {
         const response = ctx.getResponse();
         const request = ctx.getRequest<Request>();
 
-        // console.log(request);
-        
-
         if (exception instanceof BadRequestException) {
             this.templateException(response, exception, 'Error en la validación de datos')
         }
@@ -46,6 +43,10 @@ export class CustomExceptionsFilters implements ExceptionFilter {
         const status = exception.getStatus();
         const error = exception.getResponse()['error'];
         let message = exception.getResponse()['message'];
+
+        console.log(message);
+        
+        
         let data: any = {}
         if (Array.isArray(message)) {
             data = { errors: message }

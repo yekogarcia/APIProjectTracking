@@ -17,7 +17,7 @@ export class ExpensesService {
       const newExpense = this.expensesRepository.create({
         ...data,
         userId: 1,
-        projectId: { id: data.projectId }
+        project: { id: data.projectId }
       });
       return await this.expensesRepository.save(newExpense);
     } catch (error) {

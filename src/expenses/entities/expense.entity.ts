@@ -37,7 +37,9 @@ export class Expense {
     @UpdateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at'})
     updatedAt: Date;
 
-    @ManyToOne(() => Project)
+    @ManyToOne(() => Project, project => project.expense, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({name: 'project_id'})
-    projectId: Project;
+    project: Project;
 }

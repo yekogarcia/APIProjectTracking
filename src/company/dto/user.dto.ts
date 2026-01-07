@@ -29,3 +29,5 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['companyId'])) {}
+
+export class createUserWithoutCompanyDto extends OmitType(CreateUserDto, ['companyId']) {}

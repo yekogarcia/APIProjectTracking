@@ -1,11 +1,14 @@
 import { Company } from "../../company/entities/company.entity";
-import { Check, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany,
-     PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+    Check, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany,
+    PrimaryGeneratedColumn, UpdateDateColumn
+} from "typeorm";
 import { Expense } from "../../expenses/entities/expense.entity";
 import { Income } from "../../incomes/entities/income.entity";
+import { TotalsIncomesExpenses } from "./totalsIncomesExpenses.entity";
 
 @Entity({ name: 'projects' })
-@Check(`"status" IN ('ACTIVO', 'INACTIVO')`)
+@Check(`"status" IN ('ACTIVE', 'SUSPENDED', 'RUNNING', 'CANCELED', 'COMPLETED')`)
 @Check(`"type" IN ('PROJECT', 'SUBPROJECT')`)
 export class Project {
     @PrimaryGeneratedColumn()
@@ -19,6 +22,12 @@ export class Project {
 
     @Column({ type: 'text' })
     description: string;
+
+    @Column({ type: 'date', name: 'start_date' })
+    startDate: string;
+
+    @Column({ type: 'date', name: 'end_date', nullable: true })
+    endDate: string;
 
     @Column({ type: 'varchar', length: 20 })
     status: string;
@@ -35,13 +44,18 @@ export class Project {
     @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
     updatedAt: Date;
 
-    @ManyToOne(() => Company)
+    @ManyToOne(() => Company , company => company.projects, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'company_id' })
     company: Company;
 
-    @OneToMany(() => Expense, expense => expense.id)
+    @OneToMany(() => Expense, (expense) => expense.project)
     expense: Expense[]
 
-    @OneToMany(() => Income, income => income.id)
+    @OneToMany(() => Income, (income) => income.project)
     income: Income[]
+
+    @OneToMany(() => TotalsIncomesExpenses, (totalsIncomesExpenses) => totalsIncomesExpenses.project)
+    totalsIncomesExpenses: TotalsIncomesExpenses[];
 }

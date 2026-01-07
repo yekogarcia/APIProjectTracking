@@ -1,12 +1,13 @@
 import { PartialType } from "@nestjs/swagger";
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsDateString, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
     @IsIn(['PROJECT', 'SUBPROJECT'])
     type: string;
-    
+
     @IsNotEmpty()
     @IsString()
     name: string;
@@ -14,15 +15,33 @@ export class CreateProjectDto {
     @IsString()
     description: string;
 
+    @IsDateString()
+    startDate: string;
+
+    @Transform(({ value }) => value === '' ? undefined : value)
+    @IsOptional()
+    @IsDateString()
+    endDate: string;
+
     @IsString()
     @IsNotEmpty()
-    @IsIn(['ACTIVO', 'INACTIVO'])
+    @IsIn(['ACTIVE', 'SUSPENDED', 'RUNNING', 'CANCELED', 'COMPLETED'])
     status: string;
 
     @IsNumber()
     @IsNotEmpty()
     @IsOptional()
     parentId: number;
+
+    // @IsNotEmpty()
+    @IsOptional()
+    @IsNumber()
+    companyId: number;
+
+    // @IsNotEmpty()
+    @IsOptional()
+    @IsNumber()
+    userId: number;
 }
 
 export class UpdateProjectDto extends PartialType(CreateProjectDto) { }

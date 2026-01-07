@@ -11,4 +11,5 @@ export default registerAs('config', () => ({
     },
     JWT_SECRET: process.env.JWT_SECRET,
     apiKey: process.env.API_KEY,
+    secureHttpOnly: process.env.SECURE_HTTP_ONLY === 'true',
 }))

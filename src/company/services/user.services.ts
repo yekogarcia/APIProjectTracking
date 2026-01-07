@@ -22,14 +22,25 @@ export class UserService {
     }
 
     async findOne(id: number) {
-        const user =  await this.userRepository.findOneBy({ id })
-        if(!user)throw new BadRequestException(`User with id ${id} not found`)
+        const user = await this.userRepository.findOne(
+            {
+                where: { id },
+                relations: {
+                    company: true
+                }
+            })
+        if (!user) throw new BadRequestException(`User with id ${id} not found`)
         return user;
     }
-    
+
     async findByEmail(email: string) {
-        const user =  await this.userRepository.findOneBy({ email })
-        if(!user)throw new BadRequestException(`User with email ${email} not found`)
+        // const user = await this.userRepository.findOneBy({ email })
+        const user = await this.userRepository.findOne(
+            {
+                where: { email },
+                relations: { company: true }
+            })
+        if (!user) throw new BadRequestException(`User with email ${email} not found`)
         return user;
     }
 
@@ -46,7 +57,7 @@ export class UserService {
             throw new BadRequestException(`Error creating user ${error.message}`)
         }
     }
-    
+
     async update(id: number, data: UpdateUserDto) {
         try {
             const user = await this.findOne(id);

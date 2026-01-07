@@ -25,12 +25,13 @@ export class AuthService {
     }
 
     generateJwt(user: User) {
-        const payload = { sub: user.id};
+        const payload = {
+            sub: user.id,
+            userId: user.id,
+            companyId: user.company.id,
+            role: user.role
+        };
         return this.jwtService.sign(payload);
     }
 
-    // async validateApiKey(apiKey: string): Promise<boolean> {
-    //     // const user = await this.userService.findByApiKey(apiKey);   
-    //     // return !!user;
-    // }
 }

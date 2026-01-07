@@ -7,10 +7,17 @@ export class ResponseInterceptor implements NestInterceptor {
         const ctx = context.switchToHttp();
         const response = ctx.getResponse();
         
-        // console.log(response.statusCode);
         return next.handle().pipe(
             map((data) => {
-                const statusCode = response.statusCode || HttpStatus.OK;
+                // Extraer el statusCode personalizado si existe
+                const customStatusCode = data?.statusCode;
+                
+                // Si hay un código personalizado, usarlo; de lo contrario, forzar 200
+                const statusCode = customStatusCode || HttpStatus.OK;
+                
+                // Establecer el statusCode en la respuesta HTTP
+                response.status(statusCode);
+                
                 const statusMessage = HttpStatus[statusCode] || 'OK';
 
                 return {

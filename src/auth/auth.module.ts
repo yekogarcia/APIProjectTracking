@@ -7,6 +7,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import config  from 'src/shared/resource/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { UserService } from 'src/company/services/user.services';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
             useFactory: () => ({
                 secret: config().JWT_SECRET,
                 signOptions: { expiresIn: '6d' },
+                algorithm: 'HS256'
             }),
         }),
     ],
