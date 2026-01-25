@@ -1,14 +1,14 @@
 import { Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name: 'concepts'})
-@Check(`"type_expense" IN ('COSTOS', 'GASTOS')`)
+@Check(`"type_expense" IN ('COSTO', 'GASTO')`)
 export class Concept {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({type: 'varchar', length: 100, nullable: false})
     concept: string;
-    
+
     @Column({type: 'varchar', length: 255, nullable: false})
     description: string;
 
@@ -24,8 +24,8 @@ export class Concept {
     @Column({name: 'user_id',type: 'integer', nullable: false})
     userId: number;
 
-    @Column({name: 'project_id',type: 'integer'})
-    projectId: number;
+    @Column({name: 'project_id', type: 'integer', nullable: true})
+    projectId: number | null;
 
     @Column({name: 'company_id',type: 'integer'})
     companyId: number;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, UseGuards, Req, Put } from '@nestjs/common';
 import { ExpensesService } from '../services/expenses.service';
 import { CreateExpenseDto, UpdateExpenseDto } from '../dto/expense.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -9,13 +9,15 @@ export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}
 
   @Post()
-  create(@Body() payload: CreateExpenseDto) {
-    return this.expensesService.create(payload);
+  create(@Req() req: Request, @Body() payload: CreateExpenseDto) {
+    const { userId, companyId } = (req as any).user;
+    return this.expensesService.create(payload, userId);
   }
 
   @Get()
-  findAll() {
-    return this.expensesService.findAll();
+  findAll(@Req() req: Request) {
+    const { companyId } = (req as any).user
+    return this.expensesService.findAll(companyId);
   }
 
   @Get(':id')
@@ -23,7 +25,7 @@ export class ExpensesController {
     return this.expensesService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateExpenseDto) {
     return this.expensesService.update(id, payload);
   }

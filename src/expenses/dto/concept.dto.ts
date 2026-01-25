@@ -1,5 +1,5 @@
 import { PartialType } from "@nestjs/swagger";
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from "class-validator";
 
 export class CreateConceptDto {
     @IsNotEmpty()
@@ -17,7 +17,7 @@ export class CreateConceptDto {
     
     @IsString()
     @IsNotEmpty()
-    @IsIn(['COSTOS', 'GASTOS'])
+    @IsIn(['COSTO', 'GASTO'])
     typeExpense: string;
     
     @IsString()
@@ -25,6 +25,7 @@ export class CreateConceptDto {
     @IsIn(['PROJECT', 'COMPANY'])
     view: string;
     
+    @ValidateIf(o => o.view === 'PROJECT')
     @IsNumber()
     @IsNotEmpty()
     projectId: number;

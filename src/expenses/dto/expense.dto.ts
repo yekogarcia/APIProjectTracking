@@ -1,5 +1,5 @@
 import { OmitType, PartialType } from "@nestjs/swagger";
-import { IsDecimal, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsDateString, IsDecimal, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class CreateExpenseDto {
     @IsString()
@@ -13,11 +13,15 @@ export class CreateExpenseDto {
 
     @IsString()
     @IsOptional()
+    expense: string;
+
+    @IsString()
+    @IsOptional()
     description: string;
 
     @IsString()
     @IsNotEmpty()
-    @IsIn(['VARIABLE', 'NO VARIABLE'])
+    @IsIn(['VARIABLE', 'FIJO'])
     type: string;
     
     @IsInt()
@@ -33,9 +37,14 @@ export class CreateExpenseDto {
     @IsNotEmpty()
     totalPrice: string;
 
+    @IsDateString()
+    @IsNotEmpty()
+    expenseDate: string;
+
     @IsNumber()
     @IsNotEmpty()
     projectId: number;
 }
 
-export class UpdateExpenseDto extends PartialType(OmitType(CreateExpenseDto, ['projectId'])) {}
+// export class UpdateExpenseDto extends PartialType(OmitType(CreateExpenseDto, ['projectId'])) {}
+export class UpdateExpenseDto extends PartialType(CreateExpenseDto) {}

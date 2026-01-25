@@ -53,17 +53,25 @@ export class ProjectsService {
 
   async getByType(type: string, companyId: number) {
     // const projects = await this.projectRepository.find({ where: { type } });
-    const projects = await this.projectRepository
+    try {
+      
+      const where: any = type === 'ALL' ? ['project.company.id = :companyId', { companyId }] 
+      : ['project.type = :type AND project.company.id = :companyId', { type, companyId }]
+      const projects = await this.projectRepository
       .createQueryBuilder('project')
       .select([
         'project.id AS "key"',
         'project.id AS "value"',
         'project.name AS "label"',
       ])
-      .where('project.type = :type AND project.company.id = :companyId', { type, companyId })
+      // .where('project.type = :type AND project.company.id = :companyId', { type, companyId })
+      .where(where[0], where[1])
       .getRawMany();
-    if (!projects || projects.length === 0) throw new NotFoundException('No projects found for the specified type');
-    return projects;
+      if (!projects || projects.length === 0) throw new NotFoundException('No projects found for the specified type');
+      return projects;
+    } catch (error) {
+      throw new BadRequestException(`Error in query projects ${error.message}`)
+    }
   }
 
   async create(data: CreateProjectDto) {

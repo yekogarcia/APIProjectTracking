@@ -12,6 +12,9 @@ export class Expense {
     
     @Column({type: 'integer', nullable: false})
     concept: number;
+
+    @Column({type: 'varchar', length: 100, nullable: false})
+    expense: string;
     
     @Column({type: 'varchar', length: 255, nullable: false})
     description: string;
@@ -27,6 +30,9 @@ export class Expense {
     
     @Column({name: 'total_price', type: 'numeric',precision: 12, scale: 2, nullable: false})
     totalPrice: string;
+
+    @Column({name: 'expense_date', type: 'date', nullable: false})
+    expenseDate: Date;
 
     @Column({name:'user_id', type: 'integer', nullable: false})
     userId: number;

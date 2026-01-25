@@ -1,6 +1,7 @@
 import { Company } from "../../company/entities/company.entity";
 import {
     Check, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
 import { Expense } from "../../expenses/entities/expense.entity";
@@ -56,6 +57,6 @@ export class Project {
     @OneToMany(() => Income, (income) => income.project)
     income: Income[]
 
-    @OneToMany(() => TotalsIncomesExpenses, (totalsIncomesExpenses) => totalsIncomesExpenses.project)
-    totalsIncomesExpenses: TotalsIncomesExpenses[];
+    @OneToOne(() => TotalsIncomesExpenses, (totalsIncomesExpenses) => totalsIncomesExpenses.project)
+    totalsIncomesExpenses: TotalsIncomesExpenses;
 }

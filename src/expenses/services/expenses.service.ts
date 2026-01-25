@@ -12,21 +12,37 @@ export class ExpensesService {
     private expensesRepository: Repository<Expense>,
   ) { }
 
-  async create(data: CreateExpenseDto) {
+  async create(data: CreateExpenseDto, userId: number) {
+
     try {
       const newExpense = this.expensesRepository.create({
         ...data,
-        userId: 1,
+        userId: userId,
         project: { id: data.projectId }
       });
       return await this.expensesRepository.save(newExpense);
     } catch (error) {
-      console.log(error);
+      throw new BadRequestException(`Error creating expense: ${error.message}`);
     }
   }
 
-  async findAll() {
-    return await this.expensesRepository.find();
+  async findAll(companyId) {
+    // return await this.expensesRepository.find();
+    try {
+      
+      const data = await this.expensesRepository
+      .createQueryBuilder('e')
+      .leftJoin('concepts', 'c', 'c.id = e.concept')
+      .leftJoin('projects', 'p', 'p.id = e.project_id')
+      .select(['e.*', 'p.name as project_name', 'c.description as concept_name'])
+      .getRawMany()
+
+      return data;
+
+    } catch (error) {
+      throw new BadRequestException(`Error in query expenses ${error.message}`)
+    }
+
   }
 
   async findOne(id: number) {
@@ -37,14 +53,24 @@ export class ExpensesService {
 
   async update(id: number, data: UpdateExpenseDto) {
     try {
-      await this.expensesRepository.update(id, data); 
+      const {projectId, ...rest} = data;
+      await this.expensesRepository.update(id,
+        {
+          ...rest,
+          project: { id: projectId }
+        });
       return await this.findOne(id);
     } catch (error) {
-      throw new BadRequestException(`Error updating expense ${error.message}`);
+      throw new BadRequestException(`Error updating expense: ${error.message}`);
     }
-  }
+  } 
 
   remove(id: number) {
-    return `This action removes a #${id} expense`;
+    try {
+      return this.expensesRepository.delete(id);
+    } catch (error) {
+      throw new BadRequestException(`Error delete expense ${error.message}`)
+      
+    }
   }
 }
