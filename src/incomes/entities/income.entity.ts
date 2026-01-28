@@ -9,6 +9,9 @@ export class Income {
     @Column({type: 'varchar', length: 50, nullable: false})
     type: string;
     
+    @Column({type: 'varchar', name: 'income_name', length: 100})
+    incomeName: string;
+
     @Column({type: 'varchar', length: 255})
     description: string;
 

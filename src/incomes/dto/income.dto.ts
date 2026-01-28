@@ -7,6 +7,9 @@ export class CreateIncomeDto {
     type: string;
 
     @IsString()
+    incomeName: string;
+
+    @IsString()
     description: string;
 
     @IsDecimal()
@@ -15,7 +18,7 @@ export class CreateIncomeDto {
 
     @IsDateString()
     @IsNotEmpty()
-    incomeDate: Date;
+    incomeDate: string;
 
     @IsString()
     @IsNotEmpty()
@@ -30,5 +33,6 @@ export class CreateIncomeDto {
     projectId: number;
 }
 
-export class UpdateIncomeDto extends PartialType(OmitType(CreateIncomeDto, ['projectId'])) { }
+// export class UpdateIncomeDto extends PartialType(OmitType(CreateIncomeDto, ['projectId'])) { }
+export class UpdateIncomeDto extends PartialType(CreateIncomeDto) { }
 

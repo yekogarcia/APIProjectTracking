@@ -35,6 +35,7 @@ export class ExpensesService {
       .leftJoin('concepts', 'c', 'c.id = e.concept')
       .leftJoin('projects', 'p', 'p.id = e.project_id')
       .select(['e.*', 'p.name as project_name', 'c.description as concept_name'])
+      .where('p.company_id = :companyId', { companyId })
       .getRawMany()
 
       return data;

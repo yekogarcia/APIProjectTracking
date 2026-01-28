@@ -22,7 +22,7 @@ import { UserService } from 'src/company/services/user.services';
             inject: [config.KEY],
             useFactory: () => ({
                 secret: config().JWT_SECRET,
-                signOptions: { expiresIn: '6d' },
+                signOptions: { expiresIn: config().JWT_EXPIRES_IN as any },
                 algorithm: 'HS256'
             }),
         }),
@@ -30,4 +30,5 @@ import { UserService } from 'src/company/services/user.services';
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy, JwtStrategy],
 })
+
 export class AuthModule { }

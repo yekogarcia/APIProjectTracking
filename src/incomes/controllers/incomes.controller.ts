@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, BadRequestException, UseGuards, Req, Put } from '@nestjs/common';
 import { IncomesService } from '../services/incomes.service';
 import { CreateIncomeDto, UpdateIncomeDto } from '../dto/income.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('incomes')
 export class IncomesController {
   constructor(private readonly incomesService: IncomesService) {}
@@ -12,9 +14,9 @@ export class IncomesController {
   }
 
   @Get()
-  findAll() {
-    throw new BadRequestException('Error al obtener los ingresos');
-    return this.incomesService.findAll();
+  findAll(@Req() req: Request) {
+    const { companyId } = (req as any).user
+    return this.incomesService.findAll(companyId);
   }
 
   @Get(':id')
@@ -22,7 +24,7 @@ export class IncomesController {
     return this.incomesService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateIncomeDto) {
     return this.incomesService.update(id, payload);
   }

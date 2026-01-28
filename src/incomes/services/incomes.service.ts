@@ -3,7 +3,6 @@ import { CreateIncomeDto, UpdateIncomeDto } from '../dto/income.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Income } from '../entities/income.entity';
 import { Repository } from 'typeorm';
-import { ApiResponse } from 'src/shared/dto/apiResponse.dto';
 
 @Injectable()
 export class IncomesService {
@@ -29,8 +28,20 @@ export class IncomesService {
     }
   }
 
-  async findAll() {
-    return await this.incomeRepository.find();
+  async findAll(companyId: number): Promise<Income[]> {
+    try {
+      // return await this.incomeRepository.find();
+      const data = await this.incomeRepository
+        .createQueryBuilder('i')
+        .leftJoin('projects', 'p', 'p.id = i.project_id')
+        .select(['i.*', 'p.name as project_name'])
+        .where('p.company_id = :companyId', { companyId })
+        .getRawMany()
+
+      return data;
+    } catch (error) {
+      throw new BadRequestException(`Error fetching Incomes ${error.message}`)
+    }
   }
 
   async findOne(id: number) {
@@ -41,12 +52,15 @@ export class IncomesService {
 
   async update(id: number, data: UpdateIncomeDto) {
     try {
-      const resp = await this.incomeRepository.update(id, data);
-
+      const { projectId, ...rest } = data;
+      await this.incomeRepository.update(id, {
+        ...rest,
+        project: { id: projectId }
+      });
       return await this.findOne(id);
     } catch (error) {
       if (error.status === 404) throw new NotFoundException(`Income with id ${id} not found`)
-      throw new InternalServerErrorException(`Error updating Income ${error.message}`);
+      throw new InternalServerErrorException(`Error updating Income: ${error.message}`);
     }
   }
 
