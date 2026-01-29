@@ -24,8 +24,9 @@ export class AuthController {
         const accessToken = this.authService.generateJwt(user);
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            path: '/',
             maxAge: 24 * 60 * 60 * 1000
         });
 
@@ -40,8 +41,9 @@ export class AuthController {
     ) {
         res.clearCookie('access_token', {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             secure: process.env.NODE_ENV === 'production',
+            path: '/',
         });
         return {
             message: 'Logged out successfully'
