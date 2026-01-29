@@ -35,7 +35,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['https://app-project-tracking-production.up.railway.app'],
     credentials: true,
   });
 
