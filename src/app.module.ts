@@ -11,8 +11,6 @@ import { CompanyModule } from './company/company.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { IncomesModule } from './incomes/incomes.module';
 import { GlobalModule } from './shared/global.module';
-import { AuthService } from './auth/services/auth.service';
-import { AuthController } from './auth/controllers/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import config from './shared/resource/config';
 
@@ -26,7 +24,6 @@ import config from './shared/resource/config';
       validationSchema: joi.object({
         DATABASE_CONNECTION: joi.string().default('postgres'),
         PORT: joi.number().default(3000),
-        API_KEY: joi.string().required(),
       })
     }),
     GlobalModule,
