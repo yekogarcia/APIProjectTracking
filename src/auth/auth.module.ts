@@ -7,7 +7,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import config  from 'src/shared/resource/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { UserService } from 'src/company/services/user.services';
 
 @Module({
     imports: [

@@ -35,6 +35,8 @@ export class ConceptsService {
     }
 
     async findByProjectId(id: number, companyId: number, select?: string) {
+        console.log(id, companyId);
+        
         try {
             const projects = await this.conceptsRepository
                 .createQueryBuilder('concept')
@@ -47,7 +49,7 @@ export class ConceptsService {
                 .getRawMany();
 
 
-            if (!projects || projects.length === 0) throw new NotFoundException('No projects found for the specified type');
+            if (!projects || projects.length === 0) throw new NotFoundException('No concepts found for the specified project or company, create a new concept');
             return projects;
         } catch (error) {
             throw new BadRequestException(`Error fetching concepts by project id: ${error.message}`);
