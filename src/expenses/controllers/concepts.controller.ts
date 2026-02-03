@@ -15,8 +15,9 @@ export class ConceptsController {
     }
 
     @Get()
-    findAll() {
-        return this.conceptsService.findAll();
+    findAll(@Req() req: Request) {
+        const { companyId } = (req as any).user;
+        return this.conceptsService.findAll(companyId);
     }
 
     @Get('/project/:id')

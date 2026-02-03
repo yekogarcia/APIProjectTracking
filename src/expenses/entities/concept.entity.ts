@@ -1,7 +1,7 @@
-import { Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name: 'concepts'})
-@Check(`"type_expense" IN ('COSTO', 'GASTO')`)
+// @Check(`"type_expense" IN ('COSTO', 'GASTO')`)
 export class Concept {
     @PrimaryGeneratedColumn()
     id: number;
@@ -15,7 +15,7 @@ export class Concept {
     @Column({type: 'varchar', length: 20, nullable: false})
     status: string;
 
-    @Column({name: 'type_expense',type: 'varchar', length: 20, nullable: false})
+    @Column({name: 'type_expense',type: 'varchar', length: 20, nullable: true})
     typeExpense: string;
 
     @Column({type: 'varchar', length: 20, nullable: false, default: 'ALL'})

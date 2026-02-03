@@ -4,7 +4,7 @@ import { IsDateString, IsDecimal, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional,
 export class CreateExpenseDto {
     @IsString()
     @IsNotEmpty()
-    @IsIn(['COSTO', 'GASTO'])
+    @IsIn(['COSTO', 'GASTO', 'ACTIVO'])
     typeExpense: string;
 
     @IsNumber()

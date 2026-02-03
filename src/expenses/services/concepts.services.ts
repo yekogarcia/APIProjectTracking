@@ -24,8 +24,20 @@ export class ConceptsService {
         }
     }
 
-    async findAll() {
-        return await this.conceptsRepository.find();
+    async findAll(companyId: number) {
+        // return await this.conceptsRepository.find();
+        try {
+            const concepts = await this.conceptsRepository
+            .createQueryBuilder('c')
+            .leftJoin('projects', 'p', 'p.id = c.project_id')
+            .select(['c.*', 'p.name as project_name'])
+            .where('c.company_id = :companyId', { companyId })
+            .getRawMany();
+
+            return concepts;
+        } catch (error) {
+            throw new BadRequestException(`Error fetching concepts: ${error.message}`);
+        }
     }
 
     async findOne(id: number) {
@@ -35,7 +47,6 @@ export class ConceptsService {
     }
 
     async findByProjectId(id: number, companyId: number, select?: string) {
-        console.log(id, companyId);
         
         try {
             const projects = await this.conceptsRepository
@@ -43,7 +54,7 @@ export class ConceptsService {
                 .select([
                     'concept.id AS "key"',
                     'concept.id AS "value"',
-                    'concept.description AS "label"',
+                    'concept.concept AS "label"',
                 ])
                 .where('(concept.project_id = :id OR concept.project_id is null) and concept.company_id = :companyId', { id, companyId })
                 .getRawMany();

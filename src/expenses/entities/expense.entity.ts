@@ -2,7 +2,7 @@ import { Project } from "../../projects/entities/project.entity";
 import { Check, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name: 'expenses'})
-@Check(`"type_expense" IN ('COSTO', 'GASTO')`)
+@Check(`"type_expense" IN ('COSTO', 'GASTO', 'ACTIVO')`)
 export class Expense {
     @PrimaryGeneratedColumn()
     id: number;

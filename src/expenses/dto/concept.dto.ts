@@ -16,8 +16,8 @@ export class CreateConceptDto {
     status: string;
     
     @IsString()
-    @IsNotEmpty()
-    @IsIn(['COSTO', 'GASTO'])
+    @IsOptional()
+    @IsIn(['COSTO', 'GASTO', 'ACTIVO'])
     typeExpense: string;
     
     @IsString()
