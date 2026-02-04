@@ -21,7 +21,6 @@ export class CreateExpenseDto {
 
     @IsString()
     @IsNotEmpty()
-    @IsIn(['VARIABLE', 'FIJO'])
     type: string;
     
     @IsInt()
