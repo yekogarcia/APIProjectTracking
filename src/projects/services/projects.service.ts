@@ -18,26 +18,31 @@ export class ProjectsService {
   ) { }
 
   async getAll(companyId: number) {
-    // return this.projectRepository.find();
-    const projects = await this.projectRepository.createQueryBuilder('project')
-      .leftJoin(
-        Project, 'parent',
-        'parent.id = project.parent_id',
-      ).where('project.company_id = :companyId', { companyId }).
-      addSelect([
-        'parent.name AS parent_name',
-      ]).
-      getRawMany();
+    const projects = await this.projectRepository
+      .createQueryBuilder('p')
+      .leftJoin(Project, 'parent', 'parent.id = p.parent_id')
+      .addSelect('parent.name', 'parent_name')
+      .addSelect(`
+        CASE
+          WHEN p.parent_id IS NULL THEN 0
+          ELSE 1
+        END`,
+        'level')
+      .where('p.company_id = :companyId', { companyId })
+      .orderBy('COALESCE(p.parent_id, p.id)', 'ASC')
+      .addOrderBy('p.parent_id', 'ASC', 'NULLS FIRST')
+      .addOrderBy('p.id', 'ASC')
+      .getRawMany();
 
     const mappedProjects = projects.map(p => ({
-      id: p.project_id,
-      type: p.project_type,
-      name: p.project_name,
-      description: p.project_description,
-      startDate: p.project_start_date,
-      endDate: p.project_end_date,
-      status: p.project_status,
-      parentId: p.project_parent_id,
+      id: p.p_id,
+      type: p.p_type,
+      name: p.p_name,
+      description: p.p_description,
+      startDate: p.p_start_date,
+      endDate: p.p_end_date,
+      status: p.p_status,
+      parentId: p.p_parent_id,
       parentName: p.parent_name,
     }));
 
@@ -54,19 +59,19 @@ export class ProjectsService {
   async getByType(type: string, companyId: number) {
     // const projects = await this.projectRepository.find({ where: { type } });
     try {
-      
-      const where: any = type === 'ALL' ? ['project.company.id = :companyId', { companyId }] 
-      : ['project.type = :type AND project.company.id = :companyId', { type, companyId }]
+
+      const where: any = type === 'ALL' ? ['project.company.id = :companyId', { companyId }]
+        : ['project.type = :type AND project.company.id = :companyId', { type, companyId }]
       const projects = await this.projectRepository
-      .createQueryBuilder('project')
-      .select([
-        'project.id AS "key"',
-        'project.id AS "value"',
-        'project.name AS "label"',
-      ])
-      // .where('project.type = :type AND project.company.id = :companyId', { type, companyId })
-      .where(where[0], where[1])
-      .getRawMany();
+        .createQueryBuilder('project')
+        .select([
+          'project.id AS "key"',
+          'project.id AS "value"',
+          'project.name AS "label"',
+        ])
+        // .where('project.type = :type AND project.company.id = :companyId', { type, companyId })
+        .where(where[0], where[1])
+        .getRawMany();
       if (!projects || projects.length === 0) throw new NotFoundException('No projects found for the specified type');
       return projects;
     } catch (error) {
