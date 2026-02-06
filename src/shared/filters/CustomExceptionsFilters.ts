@@ -1,4 +1,4 @@
-import { ArgumentsHost, BadGatewayException, BadRequestException, Catch, ExceptionFilter, ForbiddenException, InternalServerErrorException, MethodNotAllowedException, NotAcceptableException, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
+import { ArgumentsHost, BadGatewayException, BadRequestException, Catch, ConflictException, ExceptionFilter, ForbiddenException, HttpException, InternalServerErrorException, MethodNotAllowedException, NotAcceptableException, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
 
 
 @Catch()
@@ -37,6 +37,12 @@ export class CustomExceptionsFilters implements ExceptionFilter {
         if (exception instanceof ForbiddenException) {
             this.templateException(response, exception)
         }
+        if (exception instanceof ConflictException) {
+            this.templateException(response, exception)
+        }
+        if (exception instanceof HttpException) {
+            this.templateException(response, exception)
+        }
     }
 
     templateException(response, exception, msg?) {
@@ -45,7 +51,6 @@ export class CustomExceptionsFilters implements ExceptionFilter {
         let message = exception.getResponse()['message'];
 
         console.log(message);
-        
         
         let data: any = {}
         if (Array.isArray(message)) {

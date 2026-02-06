@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProjectDto } from '../dto/project.dto';
 import { UpdateProjectDto } from '../dto/project.dto';
 import { Project } from '../entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TotalProjects } from '../entities/totalProjects.entity';
 
 @Injectable()
@@ -104,7 +104,21 @@ export class ProjectsService {
   }
 
   async remove(id: number) {
-    return this.projectRepository.delete(id);
+    try {
+      const project = await this.projectRepository.query(`select * from totals_incomes_expenses where project_id = $1 limit 1`, [id]);
+
+      if (project.length > 0 && (Number(project[0].total_incomes) > 0 || Number(project[0].total_expenses) > 0)) {
+        throw new ConflictException('Project not deleted because it has associated incomes or expenses');
+      }
+      const result = await this.projectRepository.delete(id);
+      return { message: 'Project deleted successfully', deleted: true };
+
+    } catch (error) {
+      if (error instanceof ConflictException || error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(`Error deleting project: ${error.message}`);
+    }
   }
 
   async getTotals(companyId: number) {
