@@ -42,7 +42,7 @@ export class AuthController {
     async logout(
         @Res({ passthrough: true }) res: Response
     ) {
-        res.clearCookie('access_token', {
+        res.clearCookie('accessToken', {
             httpOnly: this.appConfig.secureHttpOnly,
             sameSite: this.appConfig.jwtSameSite as any,
             secure: process.env.NODE_ENV === 'production',

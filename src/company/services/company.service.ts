@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -19,7 +19,6 @@ export class CompanyService {
 
   async create(data: CreateCompanyDto) {
     try {
-
       const resp = await this.companyRepository.save(data);
       return resp;
 
@@ -54,13 +53,15 @@ export class CompanyService {
       };
 
       const user = await queryRunner.manager.save(User, userData);
-
       await queryRunner.commitTransaction();
 
-      return { data: company, message: 'Company and user created successfully' };
+      return { data: company, message: 'Account and user created successfully' };
 
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      if (error.code === '23505') {
+        throw new ConflictException(`A user with the email ${data.email} already exists.`);
+      }
       throw new BadRequestException(`Error creating company and user: ${error.message}`);
     } finally {
       await queryRunner.release();
