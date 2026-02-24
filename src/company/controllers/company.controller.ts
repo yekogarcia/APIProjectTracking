@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, SetMetadata } from '@nestjs/common';
 import { CompanyService } from '../services/company.service';
-import { CompanyAndUserDto, CreateCompanyDto, UpdateCompanyDto } from '../dto/company.dto';
+import { CompanyAndUserDto, CreateCompanyDto, UpdateCompanyAndUserDto, UpdateCompanyDto } from '../dto/company.dto';
 import { IS_PUBLIC_KEY, Public } from 'src/auth/decorators/public.decorator';
 
 // @SetMetadata('roles', ['admin'])
@@ -12,9 +12,17 @@ export class CompanyController {
   create(@Body() data: CreateCompanyDto) {
     return this.companysService.create(data);
   }
+  
   @Post('preregister')
-  createCompanyAnduser(@Body() data: CompanyAndUserDto) {
+  createCompanyAndUser(@Body() data: CompanyAndUserDto) {
     return this.companysService.createCompanyAndUser(data);
+  }
+
+  @Patch('profile')
+  updateCompanyAndUser(
+    @Body() data: UpdateCompanyAndUserDto
+  ) {
+    return this.companysService.updateCompanyAndUser(data);
   }
 
   // @SetMetadata('isPublic', true)

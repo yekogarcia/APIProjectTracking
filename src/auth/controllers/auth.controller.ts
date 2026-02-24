@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
@@ -63,6 +63,15 @@ export class AuthController {
         return {
             user
         };
+    }
+
+    // @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('local'))
+    @Post('validate-password')
+    async validatePassword(@Req() req: Request) {
+        
+        const user = req.user as User;
+        return user ? { valid: true } : { valid: false };
     }
 
 

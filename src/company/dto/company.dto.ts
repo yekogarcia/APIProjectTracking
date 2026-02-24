@@ -1,6 +1,6 @@
 import { IntersectionType, PartialType } from "@nestjs/swagger";
-import { IsEmail, IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { createUserWithoutCompanyDto } from "./user.dto";
+import { IsEmail, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { createUserWithoutCompanyDto, updateUserWithoutCompanyDto } from "./user.dto";
 
 export class CreateCompanyDto {
     @IsString()
@@ -31,3 +31,20 @@ export class CompanyAndUserDto extends IntersectionType(
     CreateCompanyDto,
     createUserWithoutCompanyDto,
 ) { }
+
+export class UpdateCompanyAndUserDto extends IntersectionType(
+    PartialType(UpdateCompanyDto),
+    updateUserWithoutCompanyDto,
+) {
+    @IsOptional()
+    @IsNumber()
+    userId: number;
+
+    @IsOptional()
+    @IsNumber()
+    companyId: number;
+
+    @IsOptional()
+    @IsString()
+    readonly password?: string;
+}

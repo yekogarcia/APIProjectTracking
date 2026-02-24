@@ -22,7 +22,7 @@ export class CreateConceptDto {
     
     @IsString()
     @IsOptional()
-    @IsIn(['PROJECT', 'COMPANY'])
+    @IsIn(['PROJECT', 'SYSTEM'])
     view: string;
     
     @ValidateIf(o => o.view === 'PROJECT')
