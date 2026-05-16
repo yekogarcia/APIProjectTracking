@@ -68,6 +68,7 @@ export class ProjectsService {
           'project.id AS "key"',
           'project.id AS "value"',
           'project.name AS "label"',
+          'project.parentId AS "parentId"',
         ])
         // .where('project.type = :type AND project.company.id = :companyId', { type, companyId })
         .where(where[0], where[1])

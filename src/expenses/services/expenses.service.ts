@@ -13,7 +13,6 @@ export class ExpensesService {
   ) { }
 
   async create(data: CreateExpenseDto, userId: number) {
-
     try {
       const newExpense = this.expensesRepository.create({
         ...data,
@@ -34,7 +33,7 @@ export class ExpensesService {
       .createQueryBuilder('e')
       .leftJoin('concepts', 'c', 'c.id = e.concept')
       .leftJoin('projects', 'p', 'p.id = e.project_id')
-      .select(['e.*', 'p.name as project_name', 'c.concept as concept_name', 'p.status as status'])
+      .select(['e.*', 'p.name as project_name', 'p.parent_id', 'c.concept as concept_name', 'p.status as status'])
       .where('p.company_id = :companyId', { companyId })
       .orderBy('e.id', 'DESC')
       .getRawMany()
